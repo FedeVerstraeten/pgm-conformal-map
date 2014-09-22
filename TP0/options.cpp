@@ -1,5 +1,4 @@
 #include "options.hpp"
-#include <string>
 
 using namespace std;
 
@@ -62,7 +61,8 @@ void opt_function(string const &arg)
 
 	// Leemos de la linea de comandos el tipo de funcion utilizada
     arg_ok=false;
-	for(int i=0 ; function_struct[i] ; i++)
+
+    for( size_t i=0;i<MAX_NUMFUCTION;i++)
 	{
       if(arg == function_struct[i])
         {   /*Asignar funcion al objeto*/

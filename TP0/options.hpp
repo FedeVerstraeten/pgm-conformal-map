@@ -5,8 +5,10 @@
 #include <fstream>
 #include <cstdlib>
 #include <sstream>
+#include "dictionary.hpp"
 
 using namespace std;
+
 
 void opt_input(string const &);
 void opt_output(string const &);

@@ -20,7 +20,7 @@ bool getMagicNumber(istream &iss, string &sMagicNum)
 
 bool FunctionType(string aux)
 {
-    for( size_t i=0;i<function_struct.length();i++){
+    for( size_t i=0;i<MAX_NUMFUCTION;i++){
         if(aux==function_struct[i])
             return true;
     }

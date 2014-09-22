@@ -15,7 +15,7 @@ ostream *oss = 0;
 fstream ifs, ofs;
 
 extern option_t options[];
-extern string fuction_struct[];
+extern string function_struct[];
 
 //size_t line=0;
 
@@ -41,9 +41,18 @@ int main(int argc,char *argv[])
         return EXIT_PROGRAM;
     }
 
+    cout<<"Program OK"<<endl;
 
+   size_t found=0;
 
-    //while( getline(*iss_net,str) )
+    while(getline(*iss,str2))
+    {
+        found=str2.find("#");
+        cout<<found<<endl;
+        if(found)
+            cout<<str2<<endl;
+    }
+
 /***************PRINTS**********************/
 /*
     *oss_net << "NetworkName "<<NetName << endl;

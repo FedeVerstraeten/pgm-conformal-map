@@ -17,7 +17,7 @@ dictionary.o:dictionary.cpp dictionary.hpp cmdline.h  options.hpp
 cmdline.o: cmdline.cc cmdline.h
 	$(CC)  cmdline.cc -c -o cmdline.o $(CFLAGS)
 
-options.o: options.cpp options.hpp
+options.o: options.cpp options.hpp dictionary.hpp
 	$(CC)  options.cpp -c -o options.o $(CFLAGS)
 
 process.o:process.cpp process.hpp dictionary.hpp common.hpp

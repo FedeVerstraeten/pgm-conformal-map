@@ -2,9 +2,9 @@
 #include"cmdline.h"
 #include"options.hpp"
 
-string fuction_struct[] = {
+string function_struct[] = {
                             "z", "Z",
-                            "exp(z)","EXP(Z)"
+                            "exp(z)","EXP(Z)",
                           };
 
 option_t options[] = {
