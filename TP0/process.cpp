@@ -27,20 +27,14 @@ bool FunctionType(string aux)
     return false;
 }
 
-bool createMatrix(size_t** &imagIn,size_t** &imagOut,size_t row,size_t col)
+bool createMatrix(size_t** &matrix,size_t row,size_t col)
 {
     if(row>0 && col>0)
     {
-        imagIn=new size_t* [row];
+        matrix=new size_t* [row];
         for(size_t i=0 ; i<row ; ++i)
         {
-            imagIn[i]=new size_t [col];
-        }
-
-        imagOut=new size_t* [row];
-        for(size_t i=0 ; i<row ; ++i)
-        {
-            imagOut[i]=new size_t [col];
+            matrix[i]=new size_t [col];
         }
         return true;
     }

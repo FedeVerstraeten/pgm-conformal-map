@@ -33,7 +33,7 @@ int main(int argc,char *argv[])
     size_t **imagIn = NULL;
     size_t **imagOut = NULL;
 	size_t  row=0, col=0, maxInten;
-	string str, str2, aux;
+	string str, str2;
 	string sMagicNum;
     //size_t found=0;
 
@@ -53,11 +53,12 @@ int main(int argc,char *argv[])
     //Lectura tamaños de matrices
     getline(*iss,str);
     istringstream issSize(str);
-    issSize>>col;
+    issSize>>col;	
     issSize>>row;
 
     //Creo las matrices. Otorgo memoria.
-    createMatrix(imagIn,imagOut,row,col);
+    createMatrix(imagIn,row,col);
+    createMatrix(imagOut,row,col);
 
     //Lectura máximo de intensidad
     getline(*iss,str);
@@ -66,14 +67,16 @@ int main(int argc,char *argv[])
 
     //Lectura de la matriz de entrada
     int i=0;
+    size_t aux;
     while(getline(*iss,str))
     {
         istringstream iss_matrix(str);
-        size_t aux;
+        
         for(size_t j=0 ; j<col; ++j)
         {
-            iss_matrix>>aux;
-            imagIn[i][j]=aux;
+            //iss_matrix>>aux;
+            //imagIn[i][j]=aux;
+            iss_matrix>>imagIn[i][j];
         }
         i++;
     }

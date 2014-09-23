@@ -8,6 +8,6 @@
 
 bool FunctionType(string);
 bool getMagicNumber(istream& , string& );
-bool createMatrix(size_t** &imagIn,size_t** &imagOut,size_t row,size_t col);
+bool createMatrix(size_t** &matrix,size_t row,size_t col);
 
 #endif // PROCESS_HPP_INCLUDED

@@ -2,13 +2,16 @@
 #define _COMPLEJO_H_INCLUDED_
 
 #include <iostream>
+#include <cmath>
+
+using namespace std;
 
 class complejo 
 {
 private:
 		double re_, im_;
 public:
-		complejo();
+	complejo();
 	complejo(double);
 	complejo(double, double);
 	complejo(const complejo &);
@@ -16,6 +19,7 @@ public:
 	complejo const &operator*=(complejo const &);
 	complejo const &operator+=(complejo const &);
 	complejo const &operator-=(complejo const &);
+	complejo const redondeo(void);//en el caso que la parte decimal sea 0.5 se redondea hacia abajo.
 	~complejo();
 
 	double re() const;
@@ -24,6 +28,7 @@ public:
 	double abs2() const;
 	complejo const &conjugar();
 	complejo const conjugado() const;
+	void emitir()const;
 	bool zero() const;
 
 	friend complejo const operator+(complejo const &, complejo const &);
@@ -31,6 +36,7 @@ public:
 	friend complejo const operator*(complejo const &, complejo const &);
 	friend complejo const operator/(complejo const &, complejo const &);
 	friend complejo const operator/(complejo const &, double);
+	friend complejo const exp(const complejo &);
 
 	friend bool operator==(complejo const &, double);
 	friend bool operator==(complejo const &, complejo const &);

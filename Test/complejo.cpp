@@ -1,9 +1,15 @@
-#include "complejo.hpp"
+#include "complejo.hpp"  
 #include <iostream>
 #include <cmath>
 
 using namespace std;
 
+const complejo exp(const complejo & z)
+{
+	double re = z.re_;
+	double im = z.im_;
+	return complejo(cos(re),sin(im));
+}
 complejo::complejo() 
 {
 	re_ = 0;
@@ -14,7 +20,6 @@ complejo::complejo(double r)
 	re_ = r;
 	im_ = 0;
 }
-
 complejo::complejo(double r, double i) 
 {
 	re_ = r;
@@ -24,6 +29,10 @@ complejo::complejo(complejo const &c)
 {
 	re_ = c.re_;
 	im_ = c.im_;
+}
+void complejo::emitir()const
+{
+	cout << "(" << re_ << "," << im_ << ")" << endl; 
 }
 complejo const & complejo::operator=(complejo const &c)
 {
@@ -54,7 +63,16 @@ complejo const & complejo::operator-=(complejo const &c)
 	re_ = re, im_ = im;
 	return *this;
 }
+complejo const complejo::redondeo(void)
+{
+	if( (((int)re_)+0.5) < re_)
+		re_=(int)++re_; 
+	else re_=(int)re_;
 
+	if( (((int)im_)+0.5) < im_)
+		im_=(int)++im_; 
+	else im_=(int)im_;
+}
 complejo::~complejo()
 {
 }
@@ -94,7 +112,7 @@ bool complejo::zero() const
 	
 	if(ZERO(re_) && ZERO(im_)) return true;
 	
-	else return false;
+	else false;
 }
 
 complejo const operator+(complejo const &x, complejo const &y)
