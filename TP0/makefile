@@ -1,14 +1,14 @@
 #compilacion y ejecucion de los archivos
 CC       =  g++
 CFLAGS   = -g -Wall  -pedantic
-OBJS	 = main.o   dictionary.o  cmdline.o options.o process.o
+OBJS	 = main.o   dictionary.o  cmdline.o options.o process.o printers.o
 
 
 
 muestras.exe:$(OBJS)
 	$(CC)  $(OBJS) -o main.exe
 
-main.o:main.cpp dictionary.hpp common.hpp cmdline.h options.hpp
+main.o:main.cpp dictionary.hpp common.hpp cmdline.h options.hpp printers.hpp
 	$(CC) main.cpp -c -o main.o $(CFLAGS)
 
 dictionary.o:dictionary.cpp dictionary.hpp cmdline.h  options.hpp
@@ -23,6 +23,8 @@ options.o: options.cpp options.hpp dictionary.hpp
 process.o:process.cpp process.hpp dictionary.hpp common.hpp
 	$(CC) process.cpp -c -o process.o $(CFLAGS)
 
+printers.o:printers.cpp printers.hpp common.hpp
+	$(CC) printers.cpp -c -o printers.o $(CFLAGS)
 
 clean:
 	rm *.o
