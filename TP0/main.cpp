@@ -39,6 +39,7 @@ int main(int argc,char *argv[])
 
     // Se extrae caracteres desde iss y los coloca en str, hasta encontrar '/n'.
     getline(*iss,str);
+	while(str.find('#')==0) getline(*iss,str);
 
     // Transformo el string en un stream. Me permite usar '>>' en lectura.
     istringstream issMagicNum(str);
@@ -46,7 +47,9 @@ int main(int argc,char *argv[])
     //MagicNumber
     if(getMagicNumber(issMagicNum, sMagicNum)==false)
     {
-        cerr << "error: missing P2 Magic Number" << endl;
+        cerr << "error: missing "
+			 << sMagicNum
+			 << " Magic Number" << endl;
         return EXIT_PROGRAM;
     }
 
@@ -74,9 +77,17 @@ int main(int argc,char *argv[])
         
         for(size_t j=0 ; j<col; ++j)
         {
-            //iss_matrix>>aux;
-            //imagIn[i][j]=aux;
-            iss_matrix>>imagIn[i][j];
+            iss_matrix>>aux;
+            if(aux>maxInten)
+			{	
+				cerr<<"Invalid value "<<imagIn[i][j]
+					<<"in position "
+					<<"("<<i<<";"<<j<<")"
+					<<endl;
+				return EXIT_PROGRAM; 
+			}
+			else
+            	imagIn[i][j]=aux;
         }
         i++;
     }
