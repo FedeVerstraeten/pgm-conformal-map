@@ -4,11 +4,13 @@
 
 using namespace std;
 
+const complejo id(const complejo & z)
+{
+	return complejo(z);
+}
 const complejo exp(const complejo & z)
 {
-	double re = z.re_;
-	double im = z.im_;
-	return complejo(cos(re),sin(im));
+	return complejo(exp(z.re())*cos(z.im()),exp(z.re())*sin(z.im()));
 }
 complejo::complejo() 
 {
@@ -111,8 +113,7 @@ bool complejo::zero() const
  #define ZERO(x) ((x) == +0.0 && (x) == -0.0)
 	
 	if(ZERO(re_) && ZERO(im_)) return true;
-	
-	else false;
+	else return	false;
 }
 
 complejo const operator+(complejo const &x, complejo const &y)
