@@ -6,7 +6,8 @@ extern istream *iss;
 extern ostream *oss;
 extern fstream ifs;
 extern fstream ofs;
-extern string function_struct[];
+extern string function_dictionary[];
+extern string typeFunction;
 
 void opt_input(string const &arg)
 {
@@ -64,8 +65,9 @@ void opt_function(string const &arg)
 
     for( size_t i=0;i<MAX_NUMFUCTION;i++)
 	{
-      if(arg == function_struct[i])
-        {   /*Asignar funcion al objeto*/
+      if(arg == function_dictionary[i])
+        {   // Asignar funcion, guardo su nombre globalmente. 
+			typeFunction=arg;	
             cout<<"Fuction enable: "<<arg<<endl;
             arg_ok=true;
         }
@@ -78,11 +80,4 @@ void opt_function(string const &arg)
              << endl;
         exit(1);
 	}
-/*
-	if (iss.bad()) {
-		cerr << "cannot read function."
-		     << endl;
-		exit(1);
-	}
-*/
 }

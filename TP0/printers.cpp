@@ -1,4 +1,5 @@
-#include"printers.hpp"
+#include "printers.hpp"
+#include "common.hpp"
 
 void printMatrix(size_t** matrix, ostream &os,const size_t &row,const size_t &col)
 {
@@ -16,7 +17,7 @@ void printMatrix(size_t** matrix, ostream &os,const size_t &row,const size_t &co
 
 void printImage(ostream &os,size_t** matrix,const size_t &row,const size_t &col,const size_t &maxInten)
 {
-    os<<"P2"<<endl;
+    os<<MAGICNUM<<endl;
     os<<col<<" "<<row<<endl;
     os<<maxInten<<endl;
 

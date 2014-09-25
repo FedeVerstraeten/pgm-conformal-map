@@ -1,9 +1,13 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
-#define EXIT_PROGRAM 1
-#define EXIT_SUCCESS 0
-#define ERROR_PROCESS -1
+#define EXIT_PROGRAM 	 1
+#define EXIT_SUCCESS 	 0
+#define ERROR_PROCESS 	-1
+#define MAGICNUM 	"P2"
+#define ANCHO_IMAGEN 	20
+#define ALTO_IMAGEN 	40
+
 
 using namespace std;
 

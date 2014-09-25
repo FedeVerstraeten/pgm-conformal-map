@@ -2,7 +2,7 @@
 #include"cmdline.h"
 #include"options.hpp"
 
-string function_struct[] = {
+string function_dictionary[] = {
                             "z", "Z",
                             "exp(z)","EXP(Z)",
                           };
@@ -10,7 +10,7 @@ string function_struct[] = {
 option_t options[] = {
 	{1, "i", "input" , "-", opt_input, OPT_DEFAULT},
 	{1, "o", "output", "-", opt_output, OPT_DEFAULT},
-    {0, "h", "help"  , NULL, opt_help, OPT_DEFAULT},
+    	{0, "h", "help"  , NULL, opt_help, OPT_DEFAULT},
 	{1, "f", "function","z",opt_function,OPT_DEFAULT},// f(z)=z valor por defecto
 	{0, },
 };
