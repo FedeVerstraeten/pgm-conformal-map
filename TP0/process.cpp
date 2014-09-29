@@ -105,7 +105,7 @@ status_t readMatrixIN(istream& is,size_t** &matrix,const size_t &maxInten)
     {
         if(aux>maxInten)
         {
-            cerr<<"Invalid value "<<matrix[i][j]
+            cerr<<"Invalid value "<<aux
                 <<" in position "
                 <<"("<<i<<";"<<j<<")"
                 <<endl;
