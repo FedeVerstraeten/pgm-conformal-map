@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class complejo 
+class complejo
 {
 private:
 		double re_, im_;
@@ -24,7 +24,7 @@ public:
 	complejo const &operator+=(complejo const &);
 	complejo const &operator-=(complejo const &);
 	/*************************** METODOS ******************************/
-	complejo const redondeo(void);//en el caso que la parte decimal sea 0.5 se redondea hacia abajo.
+	void redondeo(void);//en el caso que la parte decimal sea 0.5 se redondea hacia abajo.
 	double re() const;
 	double im() const;
 	double abs() const;

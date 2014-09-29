@@ -1,4 +1,4 @@
-#include "complejo.hpp"  
+#include "complejo.hpp"
 #include <iostream>
 #include <cmath>
 
@@ -12,29 +12,29 @@ const complejo exp(const complejo & z)
 {
 	return complejo(exp(z.re())*cos(z.im()),exp(z.re())*sin(z.im()));
 }
-complejo::complejo() 
+complejo::complejo()
 {
 	re_ = 0;
 	im_ = 0;
 }
-complejo::complejo(double r) 
+complejo::complejo(double r)
 {
 	re_ = r;
 	im_ = 0;
 }
-complejo::complejo(double r, double i) 
+complejo::complejo(double r, double i)
 {
 	re_ = r;
 	im_ = i;
 }
-complejo::complejo(complejo const &c) 
+complejo::complejo(complejo const &c)
 {
 	re_ = c.re_;
 	im_ = c.im_;
 }
 void complejo::emitir()const
 {
-	cout << "(" << re_ << "," << im_ << ")" << endl; 
+	cout << "(" << re_ << "," << im_ << ")" << endl;
 }
 complejo const & complejo::operator=(complejo const &c)
 {
@@ -65,14 +65,20 @@ complejo const & complejo::operator-=(complejo const &c)
 	re_ = re, im_ = im;
 	return *this;
 }
-complejo const complejo::redondeo(void)
+void complejo::redondeo(void)
 {
 	if( (((int)re_)+0.5) < re_)
-		re_=(int)++re_; 
+	{
+	    ++re_;
+	    re_=(int)re_;
+	}
 	else re_=(int)re_;
 
 	if( (((int)im_)+0.5) < im_)
-		im_=(int)++im_; 
+	{
+	    ++im_;
+	    im_=(int)im_;
+	}
 	else im_=(int)im_;
 }
 complejo::~complejo()
@@ -111,7 +117,7 @@ complejo const complejo::conjugado() const
 bool complejo::zero() const
 {
  #define ZERO(x) ((x) == +0.0 && (x) == -0.0)
-	
+
 	if(ZERO(re_) && ZERO(im_)) return true;
 	else return	false;
 }
@@ -170,13 +176,13 @@ istream & operator>>(istream &is, complejo &c)
 	double im = 0;
 	char ch = 0;
 
-	if (is >> ch && ch == '(') 
+	if (is >> ch && ch == '(')
 	{
 		if (is >> re && is >> ch && ch == ',' && is >> im && is >> ch && ch == ')')
 			good = true;
 		else
 			bad = true;
-	} 
+	}
 	else if (is.good())
 	{
 		is.putback(ch);

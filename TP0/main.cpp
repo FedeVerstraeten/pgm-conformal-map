@@ -2,7 +2,7 @@
 Jueves 25 de Septiembre de 2014.
 TP0 - Algoritmos II - Cátedra Calvo
 
-Docentes TP: 
+Docentes TP:
 			- Lucio Santi,
 			- Leandro Santi.
 
@@ -10,7 +10,7 @@ Autores:
 			- Federico Verstraeten <federico.verstraeten@gmail.com>
 			- Jeremías Ignacio Zec <jeremiaszec@gmail.com>
 
-Título: 
+Título:
 
 NOTA:
 
@@ -54,8 +54,6 @@ double initY=0;
 extern option_t options[];
 extern string function_dictionary[];
 
-//size_t line=0;
-
 
 /********************************************
 *					MAIN					*
@@ -71,12 +69,9 @@ int main(int argc,char *argv[])
     size_t **matrixIn = NULL;
     size_t **matrixOut = NULL;
 	size_t maxInten;
-	string str, str2;
-	string sMagicNum;
-	complejo z; 
+	string str, sMagicNum;
+	complejo z;
 	complejo w; // w=f(z)
-
-    //size_t found=0;
 
     // Se extrae caracteres desde iss y los coloca en str,
 	// hasta encontrar '/n'.
@@ -86,20 +81,17 @@ int main(int argc,char *argv[])
     istringstream issMagicNum(str);
 
     //MagicNumber
-    if(getMagicNumber(issMagicNum, sMagicNum)==false)
+    if(getMagicNumber(issMagicNum,sMagicNum)==ERROR)
     {
-        cerr << "error: missing "
+        cerr << "Error: invalid "
 			 << sMagicNum
 			 << " Magic Number" << endl;
         return EXIT_PROGRAM;
     }
 
     //Lectura tamaños de matrices
-    readLine(*iss,str);
-    istringstream issSize(str);
-    issSize>>anchoImag;	
-    issSize>>altoImag;
-	
+    if(readSize(*iss)==ERROR) return EXIT_PROGRAM;
+
 	deltaX = 2.0/anchoImag;
 	deltaY = 2.0/altoImag;
 	initX = deltaX/2.0-1;
@@ -110,34 +102,10 @@ int main(int argc,char *argv[])
     createMatrix(matrixOut,altoImag,anchoImag);
 
     //Lectura máximo de intensidad
-    readLine(*iss,str);
-    istringstream issMax(str);
-    issMax>>maxInten;
+    if(readMaxIntensity(*iss,maxInten)==ERROR) return EXIT_PROGRAM;
 
     //Lectura de la matriz de entrada
-    size_t i=0;
-    size_t aux;
-	
-    while(getline(*iss,str))
-    {
-        istringstream iss_matrix(str);
-        
-        for(size_t j=0 ; j<anchoImag; ++j)
-        {
-            iss_matrix>>aux;
-            if(aux>maxInten)
-			{	
-				cerr<<"Invalid value "<<matrixIn[i][j]
-					<<"in position "
-					<<"("<<i<<";"<<j<<")"
-					<<endl;
-				return EXIT_PROGRAM; 
-			}
-			else
-            	matrixIn[i][j]=aux;
-        }
-        i++;
-    }
+    if(readMatrixIN(*iss,matrixIn,maxInten)==ERROR) return EXIT_PROGRAM;
 
 	// Recorro matriz destino y se copia los tonos de la matriz de origen,
 	// según la función w=f(z)
@@ -148,7 +116,7 @@ int main(int argc,char *argv[])
 			// Recibo las coordenadas de la matriz destino,
 			// z es el correspondiente valor del plano complejo 2x2.
 			z = matrizAplanoC(col,fil);
-			
+
 			if(typeFunction=="exp(z)" || typeFunction=="EXP(Z)") w=exp(z);
 			else if (typeFunction=="z" || typeFunction=="Z") w=id(z);
 
@@ -160,11 +128,13 @@ int main(int argc,char *argv[])
 				matrixOut[fil][col]=matrixIn[(int)w.im()][(int)w.re()];
 			}
 		}
-	}		
+	}
 
     //Impresión de imagen por salida
     printImage(*oss,matrixOut,altoImag,anchoImag,maxInten);
 
+    deleteMatrix(matrixIn,altoImag,anchoImag);
+    deleteMatrix(matrixOut,altoImag,anchoImag);
 
     return EXIT_SUCCESS;
 }

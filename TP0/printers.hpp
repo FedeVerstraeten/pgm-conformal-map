@@ -1,5 +1,6 @@
 #ifndef PRINTERS_HPP
 #define PRINTERS_HPP
+
 #include"common.hpp"
 #include<iostream>
 #include <string>

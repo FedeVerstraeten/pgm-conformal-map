@@ -2,21 +2,16 @@
 #include "common.hpp"
 
 extern string function_dictionary[];
+extern size_t  altoImag, anchoImag;
 
 
 /**********************************************************************/
 
-bool getMagicNumber(istream &iss, string &sMagicNum)
+status_t getMagicNumber(istream &is,string &str)
 {
-    string aux;
-    iss >> aux;
-    if(aux==MAGICNUM)
-    {
-        iss >> aux;
-        sMagicNum=aux;
-        return true;
-    }
-    return false;
+    is >> str;
+    if(str==MAGICNUM) return OK;
+    else return ERROR;
 }
 
 bool FunctionType(string aux)
@@ -42,8 +37,86 @@ bool createMatrix(size_t** &matrix,size_t row,size_t col)
     }
     return false;
 }
+
+void deleteMatrix(size_t** &matrix,size_t row,size_t col)
+{
+    for(size_t i = 0 ; i < row ; i++)
+        delete[] matrix[i];
+
+    delete[] matrix;
+}
+
+
 void readLine(istream &is, string &str)
 {
 	getline(is,str);
 	while(str.find('#')==0) getline(is,str);
+}
+
+status_t readSize(istream &is)
+{
+    string str;
+    bool good;
+
+    readLine(is,str);
+    istringstream issSize(str);
+
+    if(issSize>>anchoImag && issSize>>altoImag) good=true;
+    else good=false;
+
+    if(good==false)
+    {
+        issSize.clear(ios::badbit);
+        cerr<<"Error: invalid size value "<<endl;
+        return ERROR;
+    }
+
+    return OK;
+}
+
+status_t readMaxIntensity(istream &is,size_t &maxInten)
+{
+    string str;
+    bool good;
+
+    readLine(is,str);
+    istringstream issMax(str);
+
+    if(issMax>>maxInten)good=true;
+    else good=false;
+
+    if(good==false)
+    {
+        issMax.clear(ios::badbit);
+        cerr<<"Error: invalid max intensity value "<<endl;
+        return ERROR;
+    }
+
+    return OK;
+}
+
+status_t readMatrixIN(istream& is,size_t** &matrix,const size_t &maxInten)
+{
+    size_t i=0; ////iterador de "Alto de imagen"
+    size_t j=0; //iterador de "Ancho de imagen"
+    size_t aux;
+
+    while(is>>aux)
+    {
+        if(aux>maxInten)
+        {
+            cerr<<"Invalid value "<<matrix[i][j]
+                <<" in position "
+                <<"("<<i<<";"<<j<<")"
+                <<endl;
+            return ERROR;
+        }
+        else
+        {
+            matrix[i][j]=aux;
+            j++;
+        }
+        if(j>=anchoImag){ j=0; i++;}
+    }
+    return OK;
 }
