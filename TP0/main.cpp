@@ -97,15 +97,20 @@ int main(int argc,char *argv[])
 	initX = deltaX/2.0-1;
 	initY = deltaY/2.0-1;
 
+    //Lectura máximo de intensidad
+    if(readMaxIntensity(*iss,maxInten)==ERROR) return EXIT_PROGRAM;
+
     //Creo las matrices. Otorgo memoria.
     createMatrix(matrixIn,altoImag,anchoImag);
     createMatrix(matrixOut,altoImag,anchoImag);
 
-    //Lectura máximo de intensidad
-    if(readMaxIntensity(*iss,maxInten)==ERROR) return EXIT_PROGRAM;
-
     //Lectura de la matriz de entrada
-    if(readMatrixIN(*iss,matrixIn,maxInten)==ERROR) return EXIT_PROGRAM;
+    if(readMatrixIN(*iss,matrixIn,maxInten)==ERROR)
+    {
+        deleteMatrix(matrixIn,altoImag,anchoImag);
+        deleteMatrix(matrixOut,altoImag,anchoImag);
+        return EXIT_PROGRAM;
+    }
 
 	// Recorro matriz destino y se copia los tonos de la matriz de origen,
 	// según la función w=f(z)
