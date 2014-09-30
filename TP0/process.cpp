@@ -82,7 +82,7 @@ status_t readMaxIntensity(istream &is,size_t &maxInten)
     readLine(is,str);
     istringstream issMax(str);
 
-    if(issMax>>maxInten)good=true;
+    if(issMax>>maxInten && maxInten<=255)good=true;
     else good=false;
 
     if(good==false)
@@ -101,22 +101,21 @@ status_t readMatrixIN(istream& is,size_t** &matrix,const size_t &maxInten)
     size_t j=0; //iterador de "Ancho de imagen"
     size_t aux;
 
-    while(is>>aux)
-    {
-        if(aux>maxInten)
-        {
-            cerr<<"Invalid value "<<aux
-                <<" in position "
-                <<"("<<i<<";"<<j<<")"
-                <<endl;
-            return ERROR;
-        }
-        else
-        {
-            matrix[i][j]=aux;
-            j++;
-        }
+    while(is>>aux && aux<=maxInten)
+    {                
+         matrix[i][j]=aux;
+         j++;
+        
         if(j>=anchoImag){ j=0; i++;}
     }
+    if(is.fail() || aux>maxInten)
+    {
+        cerr<<"Invalid value "<<aux
+            <<" in position "
+            <<"("<<i<<";"<<j<<")"
+            <<endl;
+            return ERROR;
+     }
+
     return OK;
 }
