@@ -61,7 +61,7 @@ status_t readSize(istream &is)
     readLine(is,str);
     istringstream issSize(str);
 
-    if(issSize>>anchoImag && issSize>>altoImag) good=true;
+    if(issSize>>anchoImag && issSize>>altoImag && anchoImag!=0 && altoImag!=0) good=true;
     else good=false;
 
     if(good==false)
@@ -97,7 +97,7 @@ status_t readMaxIntensity(istream &is,size_t &maxInten)
 
 status_t readMatrixIN(istream& is,size_t** &matrix,const size_t &maxInten)
 {
-    size_t i=0; ////iterador de "Alto de imagen"
+    size_t i=0; //iterador de "Alto de imagen"
     size_t j=0; //iterador de "Ancho de imagen"
     size_t aux;
 
@@ -108,10 +108,10 @@ status_t readMatrixIN(istream& is,size_t** &matrix,const size_t &maxInten)
         
         if(j>=anchoImag){ j=0; i++;}
     }
-    if(is.fail() || aux>maxInten)
+    if((is.fail() && !is.eof()) || aux>maxInten)
     {
-        cerr<<"Invalid value "<<aux
-            <<" in position "
+        cerr<<"Invalid value "
+            <<"in position "
             <<"("<<i<<";"<<j<<")"
             <<endl;
             return ERROR;

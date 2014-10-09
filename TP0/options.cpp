@@ -50,7 +50,7 @@ void opt_output(string const &arg)
 
 void opt_help(string const &arg)
 {
-	cout << "cmdline [-i stream_in] [-o stream_out]"
+	cout << "cmdline [-i stream_in] [-o stream_out][-f function]"
          << endl;
 	exit(0);
 }
@@ -68,7 +68,7 @@ void opt_function(string const &arg)
       if(arg == function_dictionary[i])
         {   // Asignar funcion, guardo su nombre globalmente. 
 			typeFunction=arg;	
-            cout<<"Fuction enable: "<<arg<<endl;
+            cout<<"Function enabled: "<<arg<<endl;
             arg_ok=true;
         }
 	}
