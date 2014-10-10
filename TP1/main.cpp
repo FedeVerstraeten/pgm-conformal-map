@@ -107,6 +107,8 @@ int main(int argc,char *argv[])
     //Lectura de la matriz de entrada
     if(readMatrixIN(*iss,matrixIn,maxInten)==ERROR)
     {
+        // Si no se puede procesar la matriz de entrada
+        // liberamos la memoria y cortamos el programa
         deleteMatrix(matrixIn,altoImag,anchoImag);
         deleteMatrix(matrixOut,altoImag,anchoImag);
         return EXIT_PROGRAM;
@@ -114,30 +116,12 @@ int main(int argc,char *argv[])
 
 	// Recorro matriz destino y se copia los tonos de la matriz de origen,
 	// según la función w=f(z)
-	for(size_t fil=0 ; fil < altoImag ; fil++)
-	{
-		for(size_t col=0 ; col < anchoImag ; col++)
-		{
-			// Recibo las coordenadas de la matriz destino,
-			// z es el correspondiente valor del plano complejo 2x2.
-			z = matrizAplanoC(col,fil);
-
-			if(typeFunction=="exp(z)" || typeFunction=="EXP(Z)") w=exp(z);
-			else if (typeFunction=="z" || typeFunction=="Z") w=id(z);
-
-			if(w.re()<-1 || w.re()>1 || w.im()<-1 || w.im()>1)
-				matrixOut[fil][col]=0;
-			else
-			{
-				w = planoCaMatriz(w);
-				matrixOut[fil][col]=matrixIn[(int)w.im()][(int)w.re()];
-			}
-		}
-	}
+	matrixTransformation(matrixIn,matrixOut);
 
     //Impresión de imagen por salida
     printImage(*oss,matrixOut,altoImag,anchoImag,maxInten);
 
+    // Libero la memoria utilizada
     deleteMatrix(matrixIn,altoImag,anchoImag);
     deleteMatrix(matrixOut,altoImag,anchoImag);
 

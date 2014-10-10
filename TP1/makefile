@@ -20,7 +20,7 @@ cmdline.o: cmdline.cc cmdline.h
 options.o: options.cpp options.hpp dictionary.hpp
 	$(CC)  options.cpp -c -o options.o $(CFLAGS)
 
-process.o:process.cpp process.hpp dictionary.hpp common.hpp
+process.o:process.cpp process.hpp dictionary.hpp common.hpp planoC.hpp
 	$(CC) process.cpp -c -o process.o $(CFLAGS)
 
 printers.o:printers.cpp printers.hpp common.hpp

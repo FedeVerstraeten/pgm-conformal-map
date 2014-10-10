@@ -3,6 +3,7 @@
 
 extern string function_dictionary[];
 extern size_t  altoImag, anchoImag;
+extern string typeFunction;
 
 
 /**********************************************************************/
@@ -102,10 +103,10 @@ status_t readMatrixIN(istream& is,size_t** &matrix,const size_t &maxInten)
     size_t aux;
 
     while(is>>aux && aux<=maxInten)
-    {                
+    {
          matrix[i][j]=aux;
          j++;
-        
+
         if(j>=anchoImag){ j=0; i++;}
     }
     if((is.fail() && !is.eof()) || aux>maxInten)
@@ -118,4 +119,31 @@ status_t readMatrixIN(istream& is,size_t** &matrix,const size_t &maxInten)
      }
 
     return OK;
+}
+
+void matrixTransformation(size_t** &matrixIn,size_t** &matrixOut)
+{
+    complejo z;
+	complejo w; // w=f(z)
+
+    for(size_t fil=0 ; fil < altoImag ; fil++)
+	{
+		for(size_t col=0 ; col < anchoImag ; col++)
+		{
+			// Recibo las coordenadas de la matriz destino,
+			// z es el correspondiente valor del plano complejo 2x2.
+			z = matrizAplanoC(col,fil);
+
+			if(typeFunction=="exp(z)" || typeFunction=="EXP(Z)") w=exp(z);
+			else if (typeFunction=="z" || typeFunction=="Z") w=id(z);
+
+			if(w.re()<-1 || w.re()>1 || w.im()<-1 || w.im()>1)
+				matrixOut[fil][col]=0;
+			else
+			{
+				w = planoCaMatriz(w);
+				matrixOut[fil][col]=matrixIn[(int)w.im()][(int)w.re()];
+			}
+		}
+	}
 }
