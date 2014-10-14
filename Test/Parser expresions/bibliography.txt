@@ -1,0 +1,4 @@
+http://www.zator.com/Cpp/E9_3_1.htm
+http://www.sanfoundry.com/cpp-program-implement-expression-tree-prefix/
+http://en.wikipedia.org/wiki/Binary_expression_tree
+http://en.literateprograms.org/Shunting_yard_algorithm_%28C%29#The_algorithm
