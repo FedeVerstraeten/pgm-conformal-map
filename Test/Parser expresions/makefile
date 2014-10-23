@@ -1,18 +1,23 @@
 #compilacion y ejecucion de los archivos
 CC       =  g++
 CFLAGS   = -g -Wall  -pedantic
-OBJS	 = main.o expression.o
+OBJS	 = main.o expression.o shuntingYard.o operation.o
 
 
 muestras.exe:$(OBJS)
 	$(CC)  $(OBJS) -o main.exe
 
-main.o:main.cpp expression.hpp
+main.o:main.cpp expression.hpp shuntingYard.hpp operation.hpp common.hpp
 	$(CC) main.cpp -c -o main.o $(CFLAGS)
 
-expression.o:expression.cpp expression.hpp
+expression.o:expression.cpp expression.hpp common.hpp
 	$(CC) expression.cpp -c -o expression.o $(CFLAGS)
 
+shuntingYard.o:shuntingYard.cpp shuntingYard.hpp operation.hpp common.hpp
+	$(CC) shuntingYard.cpp -c -o shuntingYard.o $(CFLAGS)
+
+operation.o:operation.cpp operation.hpp common.hpp
+	$(CC) operation.cpp -c -o operation.o $(CFLAGS)
 
 clean:
 	rm *.o

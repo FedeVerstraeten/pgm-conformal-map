@@ -21,9 +21,24 @@ void mostrar(const vector<string> &parser)
   }
 }
 
-void guardar(vector<string> &parser,const char buff[],const size_t &pbuff)
+void guardar(vector<string> &parser,char buff[],const size_t &pbuff)
 {
-   if(pbuff!=0)parser.push_back(string(buff));
+    char c;
+    size_t i=0;
+
+    if(pbuff!=0)
+    {
+       //transformo mayúsculas a minúsculas
+        while (buff[i])
+        {
+            c=buff[i];
+            buff[i]=tolower(c);
+            i++;
+        }
+
+       //guardo el token en el vector
+       parser.push_back(string(buff));
+    }
 }
 
 void processBuffer(const char InBuff[],vector<string> &parser)
@@ -37,17 +52,28 @@ void processBuffer(const char InBuff[],vector<string> &parser)
     {
         // Análisis del string de entrada.
         // Se forman tokens según sean números, letras u operaciones
+        // Se utilizan las funciones isdigit y isalpha de la biblioteca
+        // ctype.h que corroboran si son números o letras la entrada.
         c = InBuff[pos];
-        if (c >= '0' && c<= '9')       chact = NUMBER;
-        else if (c >= 'A' && c<= 'Z') chact = LETTER;
-        else if (c >= 'a' && c<= 'z') chact = LETTER;
+
+        // Si el caracter es numérico. Se considera el punto decimal para los float
+        if (isdigit(c) || c=='.')   chact = NUMBER;
+
+        // Si es una palabra
+        else if (isalpha(c)) chact = LETTER;
+
+        // Si es una operación matemática
         else if (c=='+' || c=='-' || c=='*' || c=='/' || c=='^') chact = MATH;
+
+        // Si es un espacio en blanco, lo eliminamos
+        else if (c==' ') chact = SPACE;
 
         // Cualquier otra condición de análisis,
         // por ejemplo los paréntisis u otro símbolo.
         else chact = UNKNOWN;
 
-        // cambio de tipo
+        //-----------------------------------------------------------
+        // CAMBIO DE TIPO: guardo el token hasta donde se ha leído
         if (chact != chant  || chact==UNKNOWN )
         {
           guardar(parser,OutBuff,pbuff);
@@ -61,7 +87,7 @@ void processBuffer(const char InBuff[],vector<string> &parser)
         }
 
         // actualizar buffer de salida
-        OutBuff[pbuff] = c;
+        if(chact != SPACE)OutBuff[pbuff] = c;
 
         // incrementar punteros
         ++pbuff; ++pos;
