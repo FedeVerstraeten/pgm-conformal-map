@@ -16,7 +16,7 @@ typedef enum {
                 ERROR,
                 ERROR_NULL_POINTER,
                 ERROR_MEMORY_NO_AVAILABLE,
-                ERROR_TEXT_LINE_INVALID
+                ERROR_INVALID_TOKEN
                 }status_t;
 
 #endif

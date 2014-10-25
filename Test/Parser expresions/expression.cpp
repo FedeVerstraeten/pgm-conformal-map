@@ -74,10 +74,11 @@ void processBuffer(const char InBuff[],vector<string> &parser)
 
         //-----------------------------------------------------------
         // CAMBIO DE TIPO: guardo el token hasta donde se ha leído
-        if (chact != chant  || chact==UNKNOWN )
+        // Si es un espacio (SPACE) salteo el cambio de tipo
+        if (chact != chant  || chact==UNKNOWN || chact==MATH )
         {
           guardar(parser,OutBuff,pbuff);
-          limpiar(OutBuff,LBUFF,pbuff);
+          limpiar(OutBuff,LBUFF,pbuff);// limpia el buffer, inicializa pbuff
           chant = chact;
         }
         // mismo tipo
@@ -87,10 +88,14 @@ void processBuffer(const char InBuff[],vector<string> &parser)
         }
 
         // actualizar buffer de salida
-        if(chact != SPACE)OutBuff[pbuff] = c;
+        if(chact != SPACE)
+        {
+            OutBuff[pbuff] = c;
+            ++pbuff;
+        }
 
-        // incrementar punteros
-        ++pbuff; ++pos;
+        // incrementar iterador a buffer in
+         ++pos;
 
     } while (pos < strlen(InBuff)); // fin del análisis
 

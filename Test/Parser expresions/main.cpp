@@ -14,31 +14,25 @@ stack<float> numstack; // Pila contenedora de valores numéricos
 vector<string> parserRPN;
 
 
-string function_dictionary[]={
-                                "z", "Z", // equivalente al unico valor de variable reservado
-                                "exp","EXP",
-                                "sin","SIN",
-                                "cos","COS"
-                             };
-
-//char InBuff[] = "1243+(exp(z)+265*exp(z))-3^5";  // Buffer de entrada
-
 using namespace std;
 
 /*** Tabla de operadores ***/
 
 t_operation ops[]={
-            {"_", 10, ASSOC_RIGHT, 1, eval_uminus},
-            {"^", 9, ASSOC_RIGHT, 0, eval_exp},
-            {"*", 8, ASSOC_LEFT, 0, eval_mul},
-            {"/", 8, ASSOC_LEFT, 0, eval_div},
-            {"%", 8, ASSOC_LEFT, 0, eval_mod},
-            {"+", 5, ASSOC_LEFT, 0, eval_add},
-            {"-", 5, ASSOC_LEFT, 0, eval_sub},
-            {"(", 0, ASSOC_NONE, 0, NULL},
-            {")", 0, ASSOC_NONE, 0, NULL},
-            {"exp",10,ASSOC_RIGHT,0,NULL},
-            {0, },
+        {"^", 9, ASSOC_RIGHT, 0,OPERATOR, eval_exp},
+        {"*", 8, ASSOC_LEFT, 0,OPERATOR, eval_mul},
+        {"/", 8, ASSOC_LEFT, 0,OPERATOR, eval_div},
+        {"%", 8, ASSOC_LEFT, 0,OPERATOR, eval_mod},
+        {"+", 5, ASSOC_LEFT, 1,OPERATOR, eval_add},
+        {"-", 5, ASSOC_LEFT, 1,OPERATOR, eval_sub},
+        {",", 0, ASSOC_NONE, 0,SEPARATOR, NULL},
+        {"(", 0, ASSOC_NONE, 0,PARENTESIS_OPEN, NULL},
+        {")", 0, ASSOC_NONE, 0,PARENTESIS_CLOSE, NULL},
+        {"z",10, ASSOC_RIGHT,0,FUNCTION,NULL},
+        {"j",10, ASSOC_NONE, 0,FUNCTION,NULL}, //considerar unidad imag como función
+        {"exp",10,ASSOC_RIGHT,0,FUNCTION,NULL},
+        {"sin",10,ASSOC_RIGHT,0,FUNCTION,NULL},
+        {0, },
 
 };
 
@@ -46,22 +40,45 @@ t_operation ops[]={
 int main(int argc, char *argv[])
 {
     vector<string> parser;
+    t_opTree tree,ltree,rtree;
+    float result,var;
 
+    //Se parsea la entrada
     processBuffer(argv[1],parser);
     //mostrar(parser);
-    shuntingYard(parser);
-    //validateParser(parser)
-    //if(...=OK) coninue; else exit
 
-    //Armar arbol de operaciones y procesar
+    //Se transforma de notación infija a RPN
+    if(shuntingYard(parser)==ERROR_INVALID_TOKEN)
+    {
+        cerr<<"invalid token"<<endl;
+        return EXIT_FAILURE;
+    }
+
+
+    //Armar arbol de binario de operaciones
+    cout<<"RPN: "<<endl;
     for(size_t i=0; i<parserRPN.size() ; i++)
-        cout<<parserRPN[i]<<endl;
+        cout<<parserRPN[i];
+    cout<<endl;
+
+    //Arbol de pruebas
+    tree.data="+";
+    ltree.data="2.34";
+    rtree.data="z";
+    var=50;
+
+    tree.tleft=&ltree;
+    tree.tright=&rtree;
+
+    //Procesar el arbol
+    result=evaluateOpTree(tree,var);
+    cout<<"Resultado: "<<result<<endl;
 
     /* Para procesar el arbol se contruirá uno de string.
        Modelo aproximado de procesamiento recursivo:
 	complejo procesarArbol(const arbolString &arbol)
 	{
-            complejo resultado,numero, lRes, rRes;	    
+            complejo resultado,numero, lRes, rRes;
 
 	    if(leerArbol(arbol)==NUMERO)
             {
@@ -78,5 +95,5 @@ int main(int argc, char *argv[])
 	    return rerultado;
 	}
     */
-    return 0;
+    return EXIT_SUCCESS;
 }
