@@ -3,15 +3,9 @@
 #include <cmath>
 
 using namespace std;
-
-const complejo id(const complejo & z)
-{
-	return complejo(z);
-}
-const complejo exp(const complejo & z)
-{
-	return complejo(exp(z.re())*cos(z.im()),exp(z.re())*sin(z.im()));
-}
+/***********************************************************************/
+/**************************** CONSTRUCTORES ****************************/
+/***********************************************************************/
 complejo::complejo() 
 {
 	re_ = 0;
@@ -32,10 +26,15 @@ complejo::complejo(complejo const &c)
 	re_ = c.re_;
 	im_ = c.im_;
 }
-void complejo::emitir()const
+/***********************************************************************/
+/***************************** DESTRUCTORES ****************************/
+/***********************************************************************/
+complejo::~complejo()
 {
-	cout << "(" << re_ << "," << im_ << ")" << endl; 
 }
+/***********************************************************************/
+/****************************** OPERADORES *****************************/
+/***********************************************************************/
 complejo const & complejo::operator=(complejo const &c)
 {
 	re_ = c.re_;
@@ -65,19 +64,9 @@ complejo const & complejo::operator-=(complejo const &c)
 	re_ = re, im_ = im;
 	return *this;
 }
-complejo const complejo::redondeo(void)
-{
-	if( (((int)re_)+0.5) < re_)
-		re_=(int)++re_; 
-	else re_=(int)re_;
-
-	if( (((int)im_)+0.5) < im_)
-		im_=(int)++im_; 
-	else im_=(int)im_;
-}
-complejo::~complejo()
-{
-}
+/***********************************************************************/
+/******************************* METODOS *******************************/
+/***********************************************************************/
 double complejo::re() const
 {
 	return re_;
@@ -115,7 +104,19 @@ bool complejo::zero() const
 	if(ZERO(re_) && ZERO(im_)) return true;
 	else return	false;
 }
+void complejo::redondeo(void)
+{
+	if( (((int)re_)+0.5) < re_)
+		re_=(int)++re_; 
+	else re_=(int)re_;
 
+	if( (((int)im_)+0.5) < im_)
+		im_=(int)++im_; 
+	else im_=(int)im_;
+}
+/***********************************************************************/
+/************************** OPERADORES FRIEND **************************/
+/***********************************************************************/
 complejo const operator+(complejo const &x, complejo const &y)
 {
 	complejo z(x.re_ + y.re_, x.im_ + y.im_);
@@ -193,3 +194,53 @@ istream & operator>>(istream &is, complejo &c)
 
 	return is;
 }
+complejo const operator^(complejo const &z, int const &a)
+{
+	return(pow(abs(z),a)*exp(complejo(0,1)*a*arg(z)));
+}
+/***********************************************************************/
+/*************************** FUNCIONES FRIEND **************************/
+/***********************************************************************/
+double const re(const complejo & z)
+{
+	return z.re();
+}
+double const im(const complejo & z)
+{
+	return z.im();
+}
+const complejo exp(const complejo & z)
+{
+	return complejo(exp(z.re())*cos(z.im()),exp(z.re())*sin(z.im()));
+}
+const complejo id(const complejo & z)
+{
+	return complejo(z);
+}
+const double abs(const complejo & z)
+{
+	return sqrt(z.re() * z.re() + z.im() * z.im());
+}
+const complejo sinh(const complejo & z)
+{
+	return((exp(z)-exp(z*(-1)))/2);
+}
+complejo const cosh(const complejo & z)
+{
+	return(exp(z)+exp(z*(-1))/2);
+}
+complejo const sin(const complejo & z)
+{
+	return sinh(complejo(0,1)*z)*complejo(0,-1);
+}
+const complejo cos(const complejo & z)
+{
+	return cosh(complejo(0,1)*z);
+}
+const double arg(const complejo & z)
+{
+	return atan(im(z)/re(z));
+}
+/***********************************************************************/
+/***********************************************************************/
+/***********************************************************************/
