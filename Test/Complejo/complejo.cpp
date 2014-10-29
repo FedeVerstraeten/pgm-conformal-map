@@ -107,11 +107,15 @@ bool complejo::zero() const
 void complejo::redondeo(void)
 {
 	if( (((int)re_)+0.5) < re_)
-		re_=(int)++re_; 
+	{	++re_;
+		re_=(int)re_;
+	} 
 	else re_=(int)re_;
 
 	if( (((int)im_)+0.5) < im_)
-		im_=(int)++im_; 
+	{	++im_;
+		im_=(int)im_;
+	}  
 	else im_=(int)im_;
 }
 /***********************************************************************/

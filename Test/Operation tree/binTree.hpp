@@ -1,11 +1,13 @@
 #ifndef BINTREE_HPP
 #define BINTREE_HPP
 
+#include <stdlib.h>
 #include "common.hpp"
 
-/*************************************************
-*                 CLASS TEMPLATE                 *
-**************************************************/
+
+/**************************************************
+ *                 CLASS TEMPLATE                 *
+ **************************************************/
 
 template <typename T>
 
@@ -15,78 +17,104 @@ class binTree
         T data;
         binTree *left_;
         binTree *right_;
-        binTree *root_;
 
     public:
-        // Constructors & destructor
+        /**************************** CONSTRUCTORES ****************************/
         binTree();
         binTree(const T&);
         binTree(const binTree&);
+        /***************************** DESTRUCTORES ****************************/
         ~binTree();
-
-        // Methods
-        void insert(T);
-        void remove(T);
+        /******************************* METODOS *******************************/
+        status_t insert(binTree <T> &);
+        //bool explore(const T);
+        //binTree<T> search(const T); 
         void print (ostream&);
-
+        void printTree(ostream&);
+        /****************************** OPERADORES *****************************/
+        /************************** FUNCIONES FRIENDS **************************/
+        /************************** OPERADORES FRIENDS *************************/
 };
 
-/*************************************************
-*                 IMPLEMENTATION                 *
-**************************************************/
-
+/******************************************************************************/
+/******************************* CONSTRUCTORES ********************************/
+/******************************************************************************/
 template <typename T>
-binTree <T> :: binTree ()
+binTree<T>::binTree()
 {
     left_=NULL;
     right_=NULL;
-    root_=NULL;
 }
-
 template <typename T>
-binTree <T> :: binTree (const T &value)
+binTree<T>::binTree(const T &value)
 {
     data=value;
     left_=NULL;
     right_=NULL;
-    root_=NULL;
 }
-
 template <typename T>
-binTree <T> :: binTree (const binTree &tree)
+binTree<T>::binTree(const binTree &tree)
 {
     left_=NULL;
-    rigth_=NULL;
+    right_=NULL;
 
     // Copio la información de un árbol a otro
     data=tree.data;
 
-    if(tree.l_)
+    if(tree.left_)
     {
         // Solicito memoria y copio la estructura.
         // Al copiar obtengo el valor y una copia
         // de las direcciones de memoria. (?)
-        l_=new binTree (*(tree.l_));
+        left_=new binTree (*(tree.left_));
 
         // Apunto el nuevo árbol copiado al objeto
         // sobre el que estoy operando
-        l_->root_=this;
     }
-    if(tree.r_)
+    if(tree.right_)
     {
-        r_=new binTree (*(tree.r_));
-        r_->root_=this;
+        right_=new binTree (*(tree.right_));
     }
 
 
 }
-
 template <typename T>
 binTree <T> :: ~binTree ()
 {
-    delete left_;
-    delete right_;
+    //delete left_;
+    //delete right_;
 }
 
+template <typename T>
+status_t binTree <T> :: insert(binTree <T> & subTree)
+{
+    if(left_==NULL)
+    {
+        left_=&subTree; 
+        return  OK;
+    }
+    else if(right_==NULL)
+    {
+        right_=&subTree;
+        return OK;
+    }
+    return ERROR_INSERT_TREE_NODE;
+}
+
+template <typename T>
+void binTree <T> :: print(ostream & os)
+{
+    os<<data<<endl;
+}
+
+template <typename T>
+void binTree <T> :: printTree(ostream & os)
+{
+    os<<data<<endl;
+    if(left_!=NULL) 
+        left_->printTree(os);
+    if(right_!=NULL)
+        right_->printTree(os);
+}
 
 #endif
