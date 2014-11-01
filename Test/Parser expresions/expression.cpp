@@ -1,11 +1,11 @@
 #include "expression.hpp"
 
 // Global enum
-caracter chact;     // Caracter actual
-caracter chant;     // Caracter anaterior
+//caracter chact;     // Caracter actual
+//caracter chant;     // Caracter anaterior
 
 
-void limpiar(char buff[],const int longBuff,size_t &pbuff)
+void limpiar(char buff[],const int longBuff,size_t &pbuff,caracter &chant)
 {
   for (int i=0; i<longBuff; ++i) buff[i] = '\0';
   pbuff =0;
@@ -46,8 +46,10 @@ void processBuffer(const char InBuff[],vector<string> &parser)
     size_t pos=0,pbuff=0;   // posición inicial
     char c;
     char OutBuff[LBUFF];
+    caracter chact;     // Caracter actual
+    caracter chant;     // Caracter anaterior
 
-    limpiar(OutBuff,LBUFF,pbuff);
+    limpiar(OutBuff,LBUFF,pbuff,chant);
     do
     {
         // Análisis del string de entrada.
@@ -78,13 +80,8 @@ void processBuffer(const char InBuff[],vector<string> &parser)
         if (chact != chant  || chact==UNKNOWN || chact==MATH )
         {
           guardar(parser,OutBuff,pbuff);
-          limpiar(OutBuff,LBUFF,pbuff);// limpia el buffer, inicializa pbuff
+          limpiar(OutBuff,LBUFF,pbuff,chant);// limpia el buffer, inicializa pbuff
           chant = chact;
-        }
-        // mismo tipo
-        else
-        {
-        // cualquier computación adicional
         }
 
         // actualizar buffer de salida
@@ -94,7 +91,7 @@ void processBuffer(const char InBuff[],vector<string> &parser)
             ++pbuff;
         }
 
-        // incrementar iterador a buffer in
+        // incrementar iterador a InBuffer
          ++pos;
 
     } while (pos < strlen(InBuff)); // fin del análisis

@@ -5,13 +5,15 @@
 #include "expression.hpp"
 #include "shuntingYard.hpp"
 #include "operation.hpp"
+#include "binTree.hpp"
+#include "complejo.hpp"
 
 /*** Declaraciones globales  ***/
 
-stack<t_operation*> opstack; // Pila contenedora de operaciones
-stack<float> numstack; // Pila contenedora de valores numéricos
+//stack<t_operation*> opstack; // Pila contenedora de operaciones
+//stack<float> numstack; // Pila contenedora de valores numéricos
 
-vector<string> parserRPN;
+//vector<string> parserRPN;
 
 
 using namespace std;
@@ -19,19 +21,29 @@ using namespace std;
 /*** Tabla de operadores ***/
 
 t_operation ops[]={
-        {"^", 9, ASSOC_RIGHT, 0,OPERATOR, eval_exp},
-        {"*", 8, ASSOC_LEFT, 0,OPERATOR, eval_mul},
-        {"/", 8, ASSOC_LEFT, 0,OPERATOR, eval_div},
-        {"%", 8, ASSOC_LEFT, 0,OPERATOR, eval_mod},
-        {"+", 5, ASSOC_LEFT, 1,OPERATOR, eval_add},
-        {"-", 5, ASSOC_LEFT, 1,OPERATOR, eval_sub},
-        {",", 0, ASSOC_NONE, 0,SEPARATOR, NULL},
-        {"(", 0, ASSOC_NONE, 0,PARENTESIS_OPEN, NULL},
-        {")", 0, ASSOC_NONE, 0,PARENTESIS_CLOSE, NULL},
-        {"z",10, ASSOC_RIGHT,0,FUNCTION,NULL},
-        {"j",10, ASSOC_NONE, 0,FUNCTION,NULL}, //considerar unidad imag como función
-        {"exp",10,ASSOC_RIGHT,0,FUNCTION,NULL},
-        {"sin",10,ASSOC_RIGHT,0,FUNCTION,NULL},
+        {"^", 9, ASSOC_RIGHT,NOT_UNARY,OPERATOR, eval_pow},
+        {"*", 8, ASSOC_LEFT, NOT_UNARY,OPERATOR, eval_mul},
+        {"/", 8, ASSOC_LEFT, NOT_UNARY,OPERATOR, eval_div},
+        //{"%", 8, ASSOC_LEFT, NOT_UNARY,OPERATOR, NULL},
+        {"+", 5, ASSOC_LEFT, BINARY_UNARY,OPERATOR, eval_add},
+        {"-", 5, ASSOC_LEFT, BINARY_UNARY,OPERATOR, eval_sub},
+        {"+_", 10, ASSOC_LEFT, UNARY,OPERATOR, eval_unplus}, //suma unaria
+        {"-_", 10, ASSOC_LEFT, UNARY,OPERATOR, eval_unminus}, //negación unaria
+        {",", 0, ASSOC_NONE, NOT_UNARY,SEPARATOR, NULL},
+        {"(", 0, ASSOC_NONE, NOT_UNARY,PARENTESIS_OPEN, NULL},
+        {")", 0, ASSOC_NONE, NOT_UNARY,PARENTESIS_CLOSE, NULL},
+        {"z",10, ASSOC_RIGHT,NOT_UNARY,VAR_INDEP,NULL},  //variable independiente
+        {"j",10, ASSOC_NONE, NOT_UNARY,IMAGINARY_UNIT,NULL},  //considerar unidad imag como función
+        {"re",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_re},
+        {"im",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_im},
+        {"exp",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_exp},
+        {"id",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_id},
+        {"abs",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_abs},
+        {"sinh",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_sinh},
+        {"cosh",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_cosh},
+        {"sin",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_sin},
+        {"cos",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_cos},
+        {"arg",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_arg},
         {0, },
 
 };
@@ -39,9 +51,10 @@ t_operation ops[]={
 
 int main(int argc, char *argv[])
 {
+
     vector<string> parser;
-    t_opTree tree,ltree,rtree;
-    float result,var;
+	binTree<string> opTree;
+    complejo result,var;
 
     //Se parsea la entrada
     processBuffer(argv[1],parser);
@@ -57,21 +70,17 @@ int main(int argc, char *argv[])
 
     //Armar arbol de binario de operaciones
     cout<<"RPN: "<<endl;
-    for(size_t i=0; i<parserRPN.size() ; i++)
-        cout<<parserRPN[i];
+    for(size_t i=0; i<parser.size() ; i++)
+        cout<<parser[i];
     cout<<endl;
 
-    //Arbol de pruebas
-    tree.data="+";
-    ltree.data="2.34";
-    rtree.data="z";
-    var=50;
-
-    tree.tleft=&ltree;
-    tree.tright=&rtree;
+	// Construyo el árbol de operaciones desde el
+	// parser en RPN
+	opTree=constructionOpTree(parser);
+	opTree.printTree(cout);
 
     //Procesar el arbol
-    result=evaluateOpTree(tree,var);
+    result=evaluateOpTree(opTree,var);
     cout<<"Resultado: "<<result<<endl;
 
     /* Para procesar el arbol se contruirá uno de string.

@@ -17,5 +17,4 @@
 status_t shuntingYard(vector<string> &);
 t_typeop isOperation(const string &str);
 
-
 #endif
