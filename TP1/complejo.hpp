@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class complejo
+class complejo 
 {
 private:
 		double re_, im_;
@@ -24,15 +24,14 @@ public:
 	complejo const &operator+=(complejo const &);
 	complejo const &operator-=(complejo const &);
 	/*************************** METODOS ******************************/
-	void redondeo(void);//en el caso que la parte decimal sea 0.5 se redondea hacia abajo.
 	double re() const;
 	double im() const;
 	double abs() const;
 	double abs2() const;
 	complejo const &conjugar();
 	complejo const conjugado() const;
-	void emitir()const;
 	bool zero() const;
+	void redondeo(void);//en el caso que la parte decimal sea 0.5 se redondea hacia abajo.
 	/*********************** OPERADORES FRIEND *************************/
 	friend complejo const operator+(complejo const &, complejo const &);
 	friend complejo const operator-(complejo const &, complejo const &);
@@ -43,9 +42,18 @@ public:
 	friend bool operator==(complejo const &, complejo const &);
 	friend std::ostream &operator<<(std::ostream &, const complejo &);
 	friend std::istream &operator>>(std::istream &, complejo &);
+	friend complejo const operator^(complejo const &, int const &);
 	/*********************** FUNCIONES FRIEND *************************/
+	friend double const re(const complejo &);
+	friend double const im(const complejo &);
 	friend complejo const exp(const complejo &);
 	friend complejo const id(const complejo &);
+	friend double const abs(const complejo &);
+	friend const complejo sinh(const complejo &);
+	friend const complejo cosh(const complejo &);
+	friend const complejo sin(const complejo &);
+	friend const complejo cos(const complejo &);
+	friend const double arg(const complejo &);
 	/******************************************************************/
 };
 

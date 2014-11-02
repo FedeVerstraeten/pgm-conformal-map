@@ -6,7 +6,6 @@ extern istream *iss;
 extern ostream *oss;
 extern fstream ifs;
 extern fstream ofs;
-extern string function_dictionary[];
 extern string typeFunction;
 
 void opt_input(string const &arg)
@@ -26,7 +25,7 @@ void opt_input(string const &arg)
 		     << arg
 		     << "."
 		     << endl;
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -44,7 +43,7 @@ void opt_output(string const &arg)
 		     << arg
 		     << "."
 		     << endl;
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -52,31 +51,12 @@ void opt_help(string const &arg)
 {
 	cout << "cmdline [-i stream_in] [-o stream_out] [-f function]"
          << endl;
-	exit(0);
+	exit(EXIT_SUCCESS);
 }
 
 void opt_function(string const &arg)
 {
-    bool arg_ok;
-
-	// Leemos de la linea de comandos el tipo de funcion utilizada
-    arg_ok=false;
-
-    for( size_t i=0;i<MAX_NUMFUCTION;i++)
-	{
-      if(arg == function_dictionary[i])
-        {   // Asignar funcion, guardo su nombre globalmente. 
-			typeFunction=arg;	
-            cout<<"Function enable: "<<arg<<endl;
-            arg_ok=true;
-        }
-	}
-
-	if(arg_ok==false)
-    {
-        cerr << "Forbidden Function "
-             << arg
-             << endl;
-        exit(1);
-	}
+    // Leer linea de comandos y guardar globalmente
+    // la función se valida en el algoritmo shunting yard
+	typeFunction=arg;
 }

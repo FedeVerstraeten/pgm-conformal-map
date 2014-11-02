@@ -1,10 +1,8 @@
 #include "process.hpp"
-#include "common.hpp"
 
-extern string function_dictionary[];
+/** Variables y estructuras externas **/
 extern size_t  altoImag, anchoImag;
-extern string typeFunction;
-
+extern binTree<string> opTree;
 
 /**********************************************************************/
 
@@ -12,17 +10,14 @@ status_t getMagicNumber(istream &is,string &str)
 {
     is >> str;
     if(str==MAGICNUM) return OK;
-    else return ERROR;
-}
+    else
+    {
+        cerr << "Error: invalid "
+             << str
+             << " Magic Number" << endl;
 
-bool FunctionType(string aux)
-{
-    for( size_t i=0;i<MAX_NUMFUCTION;i++)
-	{
-        if(aux==function_dictionary[i])
-            return true;
+        return ERROR;
     }
-    return false;
 }
 
 bool createMatrix(size_t** &matrix,size_t row,size_t col)
@@ -47,7 +42,6 @@ void deleteMatrix(size_t** &matrix,size_t row,size_t col)
     delete[] matrix;
 }
 
-
 void readLine(istream &is, string &str)
 {
 	getline(is,str);
@@ -62,7 +56,9 @@ status_t readSize(istream &is)
     readLine(is,str);
     istringstream issSize(str);
 
-    if(issSize>>anchoImag && issSize>>altoImag && anchoImag!=0 && altoImag!=0) good=true;
+    if(issSize>>anchoImag && issSize>>altoImag
+          && anchoImag!=0 && altoImag!=0) good=true;
+
     else good=false;
 
     if(good==false)
@@ -134,8 +130,9 @@ void matrixTransformation(size_t** &matrixIn,size_t** &matrixOut)
 			// z es el correspondiente valor del plano complejo 2x2.
 			z = matrizAplanoC(col,fil);
 
-			if(typeFunction=="exp(z)" || typeFunction=="EXP(Z)") w=exp(z);
-			else if (typeFunction=="z" || typeFunction=="Z") w=id(z);
+            // Procesar árbol de operaciones para cada pto.
+            // de la matriz y se obtiene w=f(z)
+			w=evaluateOpTree(opTree,z);
 
 			if(w.re()<-1 || w.re()>1 || w.im()<-1 || w.im()>1)
 				matrixOut[fil][col]=0;

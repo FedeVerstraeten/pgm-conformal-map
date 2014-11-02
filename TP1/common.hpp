@@ -4,7 +4,7 @@
 #define EXIT_PROGRAM 	 1
 #define EXIT_SUCCESS 	 0
 #define ERROR_PROCESS 	-1
-#define MAGICNUM 	"P2"
+#define MAGICNUM 	    "P2"
 #define ANCHO_IMAGEN 	20
 #define ALTO_IMAGEN 	40
 
@@ -16,7 +16,8 @@ typedef enum {
                 ERROR,
                 ERROR_NULL_POINTER,
                 ERROR_MEMORY_NO_AVAILABLE,
-                ERROR_TEXT_LINE_INVALID
+                ERROR_INVALID_TOKEN,
+                ERROR_INSERT_TREE_NODE
                 }status_t;
 
 #endif

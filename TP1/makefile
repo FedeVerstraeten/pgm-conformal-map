@@ -1,8 +1,7 @@
 #compilacion y ejecucion de los archivos
 CC       =  g++
 CFLAGS   = -g -Wall  -pedantic
-OBJS	 = main.o   dictionary.o  cmdline.o options.o process.o printers.o complejo.o planoC.o
-
+OBJS	 = main.o   dictionary.o  cmdline.o options.o process.o printers.o complejo.o planoC.o  expression.o shuntingYard.o operation.o
 
 
 muestras.exe:$(OBJS)
@@ -32,6 +31,14 @@ complejo.o:complejo.cpp complejo.hpp
 planoC.o:planoC.cpp planoC.hpp
 	$(CC) planoC.cpp -c -o planoC.o $(CFLAGS)
 
+expression.o:expression.cpp expression.hpp common.hpp
+	$(CC) expression.cpp -c -o expression.o $(CFLAGS)
+
+shuntingYard.o:shuntingYard.cpp shuntingYard.hpp operation.hpp common.hpp
+	$(CC) shuntingYard.cpp -c -o shuntingYard.o $(CFLAGS)
+
+operation.o:operation.cpp operation.hpp common.hpp binTree.hpp complejo.hpp
+	$(CC) operation.cpp -c -o operation.o $(CFLAGS)
 
 clean:
 	rm *.o

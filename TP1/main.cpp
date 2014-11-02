@@ -1,6 +1,6 @@
 /*********************************************************************
-Jueves 25 de Septiembre de 2014.
-TP0 - Algoritmos II - Cátedra Calvo
+Jueves 23 de Octubre de 2014.
+TP1 - Algoritmos II - Cátedra Calvo
 
 Docentes TP:
 			- Lucio Santi,
@@ -10,7 +10,7 @@ Autores:
 			- Federico Verstraeten <federico.verstraeten@gmail.com>
 			- Jeremías Ignacio Zec <jeremiaszec@gmail.com>
 
-Título:
+Título: Programación C++ - Procesador de imágenes PGM
 
 NOTA:
 
@@ -35,6 +35,9 @@ NOTA:
 #include "printers.hpp"
 #include "complejo.hpp"
 #include "planoC.hpp"
+#include "expression.hpp"
+#include "shuntingYard.hpp"
+#include "operation.hpp"
 
 /********************************************
 *			DECLARACIONES GLOBALES			*
@@ -45,6 +48,7 @@ ostream *oss = 0;
 fstream ifs, ofs;
 string typeFunction;
 size_t  altoImag=0, anchoImag=0;
+binTree<string> opTree;
 
 double deltaX=0;
 double deltaY=0;
@@ -52,7 +56,45 @@ double initX=0;
 double initY=0;
 
 extern option_t options[];
-extern string function_dictionary[];
+//extern string function_dictionary[];
+
+/**********************************************
+*			    TABLA DE OPERACIONES 	    	*
+***********************************************/
+t_operation ops[]={
+
+        //Operaciones
+        {"^", 9, ASSOC_RIGHT,NOT_UNARY,OPERATOR, eval_pow},
+        {"*", 8, ASSOC_LEFT, NOT_UNARY,OPERATOR, eval_mul},
+        {"/", 8, ASSOC_LEFT, NOT_UNARY,OPERATOR, eval_div},
+        {"+", 5, ASSOC_LEFT, BINARY_UNARY,OPERATOR, eval_add},
+        {"-", 5, ASSOC_LEFT, BINARY_UNARY,OPERATOR, eval_sub},
+        {"+_",10, ASSOC_LEFT, UNARY,OPERATOR, eval_unplus}, //suma unaria
+        {"-_",10, ASSOC_LEFT, UNARY,OPERATOR, eval_unminus}, //negación unaria
+        {",", 0, ASSOC_NONE, NOT_UNARY,SEPARATOR, NULL},
+        {"(", 0, ASSOC_NONE, NOT_UNARY,PARENTESIS_OPEN, NULL},
+        {")", 0, ASSOC_NONE, NOT_UNARY,PARENTESIS_CLOSE, NULL},
+        //{"%", 8, ASSOC_LEFT, NOT_UNARY,OPERATOR, NULL},
+
+        //variable independiente
+        {"z",10, ASSOC_RIGHT,NOT_UNARY,VAR_INDEP,NULL},
+        //unidad imaginaria
+        {"j",10, ASSOC_NONE, NOT_UNARY,IMAGINARY_UNIT,NULL},
+
+        //Funciones
+        {"re",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_re},
+        {"im",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_im},
+        {"exp",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_exp},
+        {"id",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_id},
+        {"abs",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_abs},
+        {"sinh",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_sinh},
+        {"cosh",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_cosh},
+        {"sin",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_sin},
+        {"cos",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_cos},
+        {"arg",10,ASSOC_RIGHT,NOT_UNARY,FUNCTION,eval_arg},
+        {0, },
+
+};
 
 
 /********************************************
@@ -61,7 +103,7 @@ extern string function_dictionary[];
 
 int main(int argc,char *argv[])
 {
-    //OPTIONS AND ARGUMENTS VALIDATION
+    //VALIDACION DE OPCIONES Y ARGUMENTOS
 	cmdline cmdl(options);
 	cmdl.parse(argc, argv);
 
@@ -70,26 +112,37 @@ int main(int argc,char *argv[])
     size_t **matrixOut = NULL;
 	size_t maxInten;
 	string str, sMagicNum;
-	complejo z;
-	complejo w; // w=f(z)
+	complejo z;     // z variable independiente
+	complejo w;     // w=f(z)
+	vector<string> parser;
+
+	//Se parsea la funcion ingresada con -f
+    processBuffer(typeFunction.c_str(),parser);
+
+    //Se transforma de notación infija a RPN
+    if(shuntingYard(parser)==ERROR_INVALID_TOKEN)
+    {
+        cerr<<"invalid token"<<endl;
+        return EXIT_PROGRAM;
+    }
+
+    // Se construye el árbol de operaciones
+    // desde el parser en RPN. Variable global.
+	opTree=constructionOpTree(parser);
 
     // Se extrae caracteres desde iss y los coloca en str,
 	// hasta encontrar '/n'.
 	readLine(*iss,str);
 
-    // Transformo el string en un stream. Me permite usar '>>' en lectura.
+    // Transformo el string en un stream.
+    // Me permite usar '>>' en lectura.
     istringstream issMagicNum(str);
 
-    //MagicNumber
+    // MagicNumber
     if(getMagicNumber(issMagicNum,sMagicNum)==ERROR)
-    {
-        cerr << "Error: invalid "
-			 << sMagicNum
-			 << " Magic Number" << endl;
         return EXIT_PROGRAM;
-    }
 
-    //Lectura tamaños de matrices
+    // Lectura tamaños de matrices
     if(readSize(*iss)==ERROR) return EXIT_PROGRAM;
 
 	deltaX = 2.0/anchoImag;

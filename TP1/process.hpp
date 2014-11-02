@@ -7,6 +7,8 @@
 #include "common.hpp"
 #include "dictionary.hpp"
 #include "planoC.hpp"
+#include "binTree.hpp"
+#include "operation.hpp"
 
 bool FunctionType(string);
 status_t getMagicNumber(istream& ,string& );
