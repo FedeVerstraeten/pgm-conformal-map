@@ -83,8 +83,8 @@ binTree<T>::binTree(const binTree &tree)
 template <typename T>
 binTree <T> :: ~binTree ()
 {
-    //delete left_;
-    //delete right_;
+    delete left_;
+    delete right_;
 }
 
 template <typename T>

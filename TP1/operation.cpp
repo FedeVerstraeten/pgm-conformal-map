@@ -192,24 +192,36 @@ binTree<string>& constructionOpTree(const vector<string>& parserRPN)
 		{
 			 node=new binTree<string>(string(op->op));
 
-			 // Si el token es una función o un operador
-			 // unario, desapilo un nodo y se inserta el
-			 // nodo función u operador al stack luego.
+            // Si el token es una variable independiente o la
+            // unidad imaginaria, apilarlo.
 			 if(op->func==VAR_INDEP || op->func==IMAGINARY_UNIT)
             		opTreeStk.push(node);
 
-			 else if ( op->func==FUNCTION ||
-                 (op->func==OPERATOR && op->unary==UNARY)
-                )
+            // Si el token es una función o un operador
+			// unario, desapilo un nodo y se inserta el
+			// nodo función u operador al stack luego.
+			 else if (  op->func==FUNCTION ||
+                        (op->func==OPERATOR && op->unary==UNARY)
+                    )
 			 {
-			 		t1=opTreeStk.top();
-					opTreeStk.pop();
+                if(!opTreeStk.empty())
+                {
+                    t1=opTreeStk.top();
+                    opTreeStk.pop();
 
-					// Insertar el nodo hijo al padre
-					node->insert(*t1);
+                    // Insertar el nodo hijo al padre
+                    node->insert(*t1);
 
-					// Colocar el nodo padre en la pila
-					opTreeStk.push(node);
+                    // Colocar el nodo padre en la pila
+                    opTreeStk.push(node);
+                }
+			    else
+                {   //si hay errores en el parserRPN
+                    cerr<<"ERROR: Function entered "
+                        <<"without independent variable"
+                        << "or numeric value ."<<endl;
+                    exit(EXIT_FAILURE);
+                }
 			 }
 
 			 // Si el token es una operación, desapilar dos
@@ -228,9 +240,8 @@ binTree<string>& constructionOpTree(const vector<string>& parserRPN)
 			 	}
                 else
                 {   //si hay errores en el parserRPN
-                    cerr<<"ERROR: construction operations "
-                        <<"tree is not possible."
-                        <<"The parser has errors"<<endl;
+                    cerr<<"ERROR: Operation entered incomplete,"
+                        <<" missing terms."<<endl;
                     exit(EXIT_FAILURE);
                 }
 
@@ -247,6 +258,12 @@ binTree<string>& constructionOpTree(const vector<string>& parserRPN)
 	// Si no hay más tokens por leer
 	node=opTreeStk.top();
 	opTreeStk.pop();
+
+	if(!opTreeStk.empty())
+	{
+	    cerr<<"ERROR: Expression entered incomplete."<<endl;
+        exit(EXIT_FAILURE);
+	}
 
 	return (*node);
 
