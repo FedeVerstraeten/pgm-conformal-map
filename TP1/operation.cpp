@@ -138,6 +138,7 @@ complejo evaluateOpTree(binTree<string>& tree,const complejo &var)
 		// Si el token es la variable independiente "z"
         if(op->func==VAR_INDEP) return var;
 
+        // Si el token es la unidad imaginaria "j"
         else if(op->func==IMAGINARY_UNIT)
         {
             complejo imag(0,1);

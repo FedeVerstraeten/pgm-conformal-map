@@ -1,6 +1,6 @@
 #compilacion y ejecucion de los archivos
 CC       =  g++
-CFLAGS   = -g -Wall  -pedantic
+CFLAGS   = -g -Wall  -pedantic -O2
 OBJS	 = main.o   dictionary.o  cmdline.o options.o process.o printers.o complejo.o planoC.o  expression.o shuntingYard.o operation.o
 
 

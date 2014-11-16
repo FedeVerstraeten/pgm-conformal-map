@@ -15,7 +15,8 @@
 /*** Definiciones ***/
 
 #define END_TABLEOP(x) ((x)->op==0 && (x)->prec==0 &&  \
-                        (x)->assoc==0 && (x)->unary==0)
+                        (x)->assoc==0 && (x)->unary==0 &&\
+                        (x)->func==0)
 
 
 /*** Tabla de asociatividad de operadores ***/
@@ -29,14 +30,14 @@ typedef enum {
 /*** Tabla de clasificador tipo de operadores ***/
 
 typedef enum {
+                 NONEOP,           // Sin clasificación. Indicador de error
                  FUNCTION,          // Funciones
                  OPERATOR,          // Operadores matemáticos
                  SEPARATOR,         // Separadores: coma, punto y coma, etc.
                  PARENTESIS_OPEN,   // Abierto: Paréntesis, corchetes, llaves,etc.
                  PARENTESIS_CLOSE,  // Cerrado:  Paréntesis, corchetes, llaves,etc.
                  VAR_INDEP,         // Variable independiente
-                 IMAGINARY_UNIT,    // Unidad imaginaria "j" o "i"
-                 NONEOP           // Sin clasificación. Indicador de error.
+                 IMAGINARY_UNIT    // Unidad imaginaria "j" o "i"
                }t_typeop;
 
 /*** Tabla de clasificador de operadores unarios***/

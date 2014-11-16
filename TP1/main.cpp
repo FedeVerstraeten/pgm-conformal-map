@@ -130,6 +130,7 @@ int main(int argc,char *argv[])
     // desde el parser en RPN. Variable global.
 	opTree=constructionOpTree(parser);
 
+
     // Se extrae caracteres desde iss y los coloca en str,
 	// hasta encontrar '/n'.
 	readLine(*iss,str);
