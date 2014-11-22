@@ -84,7 +84,7 @@ complejo eval_arg(complejo &a1,complejo &a2);
 /*** Evaluador árbol de operaciones ***/
 t_operation* getOp(const string &);
 complejo evaluateOpTree(binTree<string>&,const complejo&);
-binTree<string>& constructionOpTree(const vector<string>&);
+binTree<string>* constructionOpTree(const vector<string>&);
 
 
 #endif

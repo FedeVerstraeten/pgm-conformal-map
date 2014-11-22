@@ -2,7 +2,6 @@
 
 /** Variables y estructuras externas **/
 extern size_t  altoImag, anchoImag;
-extern binTree<string> opTree;
 
 /**********************************************************************/
 
@@ -117,7 +116,7 @@ status_t readMatrixIN(istream& is,size_t** &matrix,const size_t &maxInten)
     return OK;
 }
 
-void matrixTransformation(size_t** &matrixIn,size_t** &matrixOut)
+void matrixTransformation(size_t** &matrixIn,size_t** &matrixOut,binTree<string> &opTree)
 {
     complejo z;
 	complejo w; // w=f(z)
@@ -133,9 +132,25 @@ void matrixTransformation(size_t** &matrixIn,size_t** &matrixOut)
             // Procesar árbol de operaciones para cada pto.
             // de la matriz y se obtiene w=f(z)
 			w=evaluateOpTree(opTree,z);
+            //cout<<w<<endl;
 
-			if(w.re()<-1 || w.re()>1 || w.im()<-1 || w.im()>1)
-				matrixOut[fil][col]=0;
+			// Si el número complejo w posee indeterminaciones
+			// matemáticas sea en la parte real o imaginaria,
+			// los atributos poseeran el valor NAN (Not-A-Number)
+			if(isnan(w.re()) || isnan(w.im()))
+                matrixOut[fil][col]=1;
+
+			// Si el número complejo w es válido, se comprueba
+			// que esté dentro de los límites del cuadradado de
+			// transformación [-1;1]x[-j;j]
+			// En el caso que w.re o w.im exceda el valor máximo
+			// que almacena un 'double', el atributo poseerá el
+			// valor infinito(inf) que es una macro float
+			else if(w.re()<-1 || w.re()>1 || w.im()<-1 || w.im()>1)
+			{
+			     matrixOut[fil][col]=0;
+			}
+
 			else
 			{
 				w = planoCaMatriz(w);

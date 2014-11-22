@@ -117,7 +117,6 @@ pretado por el valor numérico que contiene 'var'.
 
 complejo evaluateOpTree(binTree<string>& tree,const complejo &var)
 {
-    //float result=0,num=0,lRes=0,rRes=0;
     double num;
     complejo result, lRes, rRes,zero(0,0);
 
@@ -157,6 +156,7 @@ complejo evaluateOpTree(binTree<string>& tree,const complejo &var)
 			result=op->eval(lRes,rRes);
     }
 
+
     return result;
 }
 
@@ -168,7 +168,7 @@ construye el árbol binario de operaciones matemáticas
 nodo raíz del mismo.
 *******************************************************/
 
-binTree<string>& constructionOpTree(const vector<string>& parserRPN)
+binTree<string>* constructionOpTree(const vector<string>& parserRPN)
 {
 	 t_operation *op=NULL;
 	 float num;
@@ -266,7 +266,7 @@ binTree<string>& constructionOpTree(const vector<string>& parserRPN)
         exit(EXIT_FAILURE);
 	}
 
-	return (*node);
+	return node;
 
 }
 

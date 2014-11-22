@@ -18,6 +18,6 @@ void readLine(istream& , string& );
 status_t readSize(istream&);
 status_t readMaxIntensity(istream&,size_t&);
 status_t readMatrixIN(istream& ,size_t** &matrix,const size_t& );
-void matrixTransformation(size_t** &matrixIn,size_t** &matrixOut);
+void matrixTransformation(size_t** &matrixIn,size_t** &matrixOut,binTree<string>&);
 
 #endif // PROCESS_HPP_INCLUDED

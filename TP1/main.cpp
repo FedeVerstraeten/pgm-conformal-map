@@ -27,17 +27,18 @@ NOTA:
 #include <sstream>
 #include <cstring>
 
-#include "common.hpp"
-#include "dictionary.hpp"
+#include "binTree.hpp"
 #include "cmdline.h"
-#include "options.hpp"
-#include "process.hpp"
-#include "printers.hpp"
+#include "common.hpp"
 #include "complejo.hpp"
-#include "planoC.hpp"
+#include "dictionary.hpp"
 #include "expression.hpp"
-#include "shuntingYard.hpp"
 #include "operation.hpp"
+#include "options.hpp"
+#include "planoC.hpp"
+#include "printers.hpp"
+#include "process.hpp"
+#include "shuntingYard.hpp"
 
 /********************************************
 *			DECLARACIONES GLOBALES			*
@@ -48,7 +49,6 @@ ostream *oss = 0;
 fstream ifs, ofs;
 string typeFunction;
 size_t  altoImag=0, anchoImag=0;
-binTree<string> opTree;
 
 double deltaX=0;
 double deltaY=0;
@@ -56,7 +56,7 @@ double initX=0;
 double initY=0;
 
 extern option_t options[];
-//extern string function_dictionary[];
+
 
 /**********************************************
 *			    TABLA DE OPERACIONES 	    	*
@@ -103,9 +103,6 @@ t_operation ops[]={
 
 int main(int argc,char *argv[])
 {
-    //VALIDACION DE OPCIONES Y ARGUMENTOS
-	cmdline cmdl(options);
-	cmdl.parse(argc, argv);
 
     //DECLARACIONES
     size_t **matrixIn = NULL;
@@ -115,6 +112,11 @@ int main(int argc,char *argv[])
 	complejo z;     // z variable independiente
 	complejo w;     // w=f(z)
 	vector<string> parser;
+	binTree<string> *opTree=NULL;
+
+	//VALIDACION DE OPCIONES Y ARGUMENTOS
+	cmdline cmdl(options);
+	cmdl.parse(argc, argv);
 
 	//Se parsea la funcion ingresada con -f
     processBuffer(typeFunction.c_str(),parser);
@@ -126,10 +128,9 @@ int main(int argc,char *argv[])
         return EXIT_PROGRAM;
     }
 
-    // Se construye el árbol de operaciones
-    // desde el parser en RPN. Variable global.
+    // Se construye el árbol de operacione desde el parser en RPN.
+    // Se retorna un puntero a la raíz del árbol
 	opTree=constructionOpTree(parser);
-
 
     // Se extrae caracteres desde iss y los coloca en str,
 	// hasta encontrar '/n'.
@@ -141,10 +142,18 @@ int main(int argc,char *argv[])
 
     // MagicNumber
     if(getMagicNumber(issMagicNum,sMagicNum)==ERROR)
+    {
+        delete opTree;
         return EXIT_PROGRAM;
+    }
+
 
     // Lectura tamaños de matrices
-    if(readSize(*iss)==ERROR) return EXIT_PROGRAM;
+    if(readSize(*iss)==ERROR)
+    {
+        delete opTree;
+        return EXIT_PROGRAM;
+    }
 
 	deltaX = 2.0/anchoImag;
 	deltaY = 2.0/altoImag;
@@ -152,7 +161,11 @@ int main(int argc,char *argv[])
 	initY = deltaY/2.0-1;
 
     //Lectura máximo de intensidad
-    if(readMaxIntensity(*iss,maxInten)==ERROR) return EXIT_PROGRAM;
+    if(readMaxIntensity(*iss,maxInten)==ERROR)
+    {
+        delete opTree;
+        return EXIT_PROGRAM;
+    }
 
     //Creo las matrices. Otorgo memoria.
     createMatrix(matrixIn,altoImag,anchoImag);
@@ -165,12 +178,13 @@ int main(int argc,char *argv[])
         // liberamos la memoria y cortamos el programa
         deleteMatrix(matrixIn,altoImag,anchoImag);
         deleteMatrix(matrixOut,altoImag,anchoImag);
+        delete opTree;
         return EXIT_PROGRAM;
     }
 
-	// Recorro matriz destino y se copia los tonos de la matriz de origen,
-	// según la función w=f(z)
-	matrixTransformation(matrixIn,matrixOut);
+	// Recorro matriz destino y se copia los tonos de
+	// la matriz de origen, según la función w=f(z)
+	matrixTransformation(matrixIn,matrixOut,*opTree);
 
     //Impresión de imagen por salida
     printImage(*oss,matrixOut,altoImag,anchoImag,maxInten);
@@ -178,6 +192,9 @@ int main(int argc,char *argv[])
     // Libero la memoria utilizada
     deleteMatrix(matrixIn,altoImag,anchoImag);
     deleteMatrix(matrixOut,altoImag,anchoImag);
+
+    // Destruyo el árbol y libero toda la memoria utilizada
+    delete opTree;
 
     return EXIT_SUCCESS;
 }

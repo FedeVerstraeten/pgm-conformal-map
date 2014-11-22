@@ -77,11 +77,9 @@ binTree<T>::binTree(const binTree &tree)
     {
         right_=new binTree (*(tree.right_));
     }
-
-
 }
 template <typename T>
-binTree <T> :: ~binTree ()
+binTree<T> :: ~binTree ()
 {
     delete left_;
     delete right_;
